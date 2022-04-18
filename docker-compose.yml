@@ -1,0 +1,45 @@
+version: '3.7'
+
+volumes:
+  dbdata:
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: deployment/nginx/Dockerfile
+      args:
+        BUILD_ENV: develop
+    ports:
+      - 8975:80
+    volumes:
+      - .:/app:delegated
+      - ./storage/app/public:/app/public/storage
+      - ./deployment/nginx/default.conf:/etc/nginx/conf.d/default.conf:delegated
+      - ./deployment/nginx/nginx.conf:/etc/nginx/nginx.conf:delegated
+
+  app:
+    build:
+      context: .
+      dockerfile: deployment/app/Dockerfile
+      args:
+        BUILD_ENV: develop
+    volumes:
+      - .:/app:delegated
+      - ./deployment/app/php.ini:/usr/local/etc/php/conf.d/php.ini:delegated
+      - ./deployment/app/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini:delegated
+      - ./deployment/app/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini:delegated
+
+  db:
+    image: postgres:12.2-alpine
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - 8976:5432
+    volumes:
+      - .:/app:delegated
+      - dbdata:/var/lib/postgresql/data
