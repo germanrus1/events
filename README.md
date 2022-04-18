@@ -11,5 +11,6 @@
 For this project recommended docker and docker-compose. If installed then execute command 
 1. docker-compose up
 
-After installing images run command
+After installing images run command and open bash in _app_ container (docker exec -it _app_service_name_ bash)
 2. php artisan key:generate
+3. php artisan migrate
