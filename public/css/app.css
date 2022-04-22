@@ -968,10 +968,6 @@ select {
   font-size: 1.125rem;
   line-height: 1.75rem;
 }
-.text-xl {
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-}
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
@@ -994,9 +990,6 @@ select {
 }
 .leading-7 {
   line-height: 1.75rem;
-}
-.leading-tight {
-  line-height: 1.25;
 }
 .tracking-wider {
   letter-spacing: 0.05em;
@@ -1032,10 +1025,6 @@ select {
   --tw-text-opacity: 1;
   color: rgb(17 24 39 / var(--tw-text-opacity));
 }
-.text-gray-800 {
-  --tw-text-opacity: 1;
-  color: rgb(31 41 55 / var(--tw-text-opacity));
-}
 .text-indigo-600 {
   --tw-text-opacity: 1;
   color: rgb(79 70 229 / var(--tw-text-opacity));
@@ -1055,6 +1044,10 @@ select {
 .text-indigo-700 {
   --tw-text-opacity: 1;
   color: rgb(67 56 202 / var(--tw-text-opacity));
+}
+.text-gray-800 {
+  --tw-text-opacity: 1;
+  color: rgb(31 41 55 / var(--tw-text-opacity));
 }
 .underline {
   -webkit-text-decoration-line: underline;
