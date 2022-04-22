@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class EventController extends Controller
@@ -52,9 +53,14 @@ class EventController extends Controller
                 ->withInput();
         }
 
-        foreach ($validator->validated() as $item) {
-            echo $item; echo '<br>';
-        }
+        $validated = $validator->validated();
+        $event = new Event();
+        $event->name = $validated['name'];
+        $event->description = $validated['description'];
+        $event->event_start =  Carbon::createFromFormat('Y-m-d H:i:s', $validated['event_start'])->timestamp;
+        $event->event_end =  Carbon::createFromFormat('Y-m-d H:i:s', $validated['event_end'])->timestamp;
+
+        var_dump($event);die;
     }
 
     /**
