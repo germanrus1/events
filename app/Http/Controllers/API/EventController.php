@@ -39,7 +39,11 @@ class EventController extends Controller
 
     public function update(EventRequest $request, Event $event)
     {
-        $event->update($request->validated());
+        $validated = $request->validated();
+        // format date to timestamp
+        $validated['event_start'] = Carbon::createFromFormat('Y-m-d H:i:s', $validated['event_start'])->getTimestamp();
+        $validated['event_end'] = Carbon::createFromFormat('Y-m-d H:i:s', $validated['event_end'])->getTimestamp();
+        $event->update($validated);
 
         return new EventResource($event);
     }
