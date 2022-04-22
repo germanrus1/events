@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\EventResource;
+use App\Http\Requests\EventRequest;
 use App\Models\Event;
-use EventRequest;
-use EventResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class EventController extends Controller
@@ -20,7 +21,13 @@ class EventController extends Controller
 
     public function store(EventRequest $request)
     {
-        $event = Event::create($request->validated());
+        $validated = $request->validated();
+        // format date to timestamp
+        $validated['event_start'] = Carbon::createFromFormat('Y-m-d H:i:s', $validated['event_start'])->getTimestamp();
+        $validated['event_end'] = Carbon::createFromFormat('Y-m-d H:i:s', $validated['event_end'])->getTimestamp();
+        $validated['user_id'] = 1; // todo сделать авторизацию
+
+        $event = Event::create($validated);
 
         return new EventResource($event);
     }

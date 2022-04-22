@@ -25,5 +25,6 @@ class Event extends Model
         'description',
         'event_start',
         'event_end',
+        'user_id',
     ];
 }
