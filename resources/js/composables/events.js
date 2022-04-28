@@ -9,8 +9,8 @@ export default function useEvents() {
     const errors = ref('')
     const router = useRouter()
 
-    const getEvents = async () => {
-        let response = await axios.get('/api/events')
+    const getEvents = async (dateWeek = '') => {
+        let response = await axios.get('/api/events?dateWeek=' + dateWeek)
         events.value = response.data.data
     }
 

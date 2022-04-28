@@ -14,20 +14,26 @@ use Illuminate\Support\Facades\Validator;
 class EventController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        return EventResource::collection(Event::all());
+        $dateWeek = $request->get('dateWeek');
+
+        if ($dateWeek) {
+            $dateWeek = Carbon::createFromFormat('Y-m-d', $dateWeek)->getTimestamp();
+        } else {
+            $dateWeek = Carbon::now()->getTimestamp(); //todo доделать
+        }
+
+        return EventResource::collection(
+            Event::all()
+                ->where('event_start', '>', $dateWeek - Event::THREE_DAY)
+                ->where('event_start', '<', $dateWeek + Event::FOUR_DAY)
+        );
     }
 
     public function store(EventRequest $request)
     {
-        $validated = $request->validated();
-        // format date to timestamp
-        $validated['event_start'] = Carbon::createFromFormat('Y-m-d H:i:s', $validated['event_start'])->getTimestamp();
-        $validated['event_end'] = Carbon::createFromFormat('Y-m-d H:i:s', $validated['event_end'])->getTimestamp();
-        $validated['user_id'] = 1; // todo сделать авторизацию
-
-        $event = Event::create($validated);
+        $event = Event::create($request);
 
         return new EventResource($event);
     }

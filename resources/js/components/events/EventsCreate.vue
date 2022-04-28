@@ -17,43 +17,56 @@
             <div>
                 <label for="description" class="block text-sm font-medium text-gray-700">Описание</label>
                 <div class="mt-1">
-                    <input type="text" name="description" id="description"
+                    <textarea type="text" name="description" id="description"
                            class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                            v-model="form.description">
+                    </textarea>
                 </div>
             </div>
 
             <div>
-                <label for="event_start" class="block text-sm font-medium text-gray-700">Начало события</label>
-                <div class="mt-1">
-                    <input type="text" name="event_start" id="event_start"
-                           class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                           v-model="form.event_start">
-                </div>
-            </div>
+                <div class="row flex justify-center mt-3">
+                    <Datepicker class="col-3"
+                                id="event_start"
+                                v-model="form.event_start"
+                                :value="form.event_start"
+                                placeholder="Выберите начало события"
+                                textInput
+                                @update:modelValue="formatDate('event_start')"
+                                :format="'yyyy-MM-dd HH:mm'"
+                    />
 
-            <div>
-                <label for="event_end" class="block text-sm font-medium text-gray-700">Конец события</label>
-                <div class="mt-1">
-                    <input type="text" name="event_end" id="event_end"
-                           class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                           v-model="form.event_end">
+                    <Datepicker class="offset-1 col-3"
+                                id="event_end"
+                                v-model="form.event_end"
+                                :value="form.event_end"
+                                placeholder="Выберите конец события"
+                                textInput
+                                valueType="format"
+                                @update:modelValue="formatDate('event_end')"
+                                :format="'yyyy-MM-dd HH:mm'"
+                    />
                 </div>
             </div>
         </div>
-
-        <button type="submit"
-                class="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase bg-gray-800 rounded-md border border-transparent ring-gray-300 transition duration-150 ease-in-out hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring disabled:opacity-25">
-            Добавить
-        </button>
+        <div class="row flex justify-center mt-5">
+            <button type="submit"
+                    class="btn btn-success col-2">
+                Добавить
+            </button>
+        </div>
     </form>
 </template>
 
 <script>
 import useEvents from '../../composables/events'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+import moment from 'moment';
 
 export default {
+    components: { Datepicker },
     setup() {
         const form = reactive({
             name: '',
@@ -67,11 +80,25 @@ export default {
         const saveEvent = async () => {
             await storeEvent({ ...form })
         }
+        const formatDate = (modelName) => {
+            form[modelName] = moment(form[modelName]).format("YYYY-MM-DD HH:mm");
+            console.log(form.event_start);
+        }
+        const format = (date) => {
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            const hour = date.getHours();
+            const minute = date.getMinutes();
+            return `${year}-${month}-${day} ${hour}:${minute}`;
+        }
 
         return {
             form,
             errors,
-            saveEvent
+            saveEvent,
+            format,
+            formatDate,
         }
     }
 }

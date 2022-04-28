@@ -1,7 +1,21 @@
 <template>
     <div class="container">
         <div class="row text-center">
-            <div class="offset-1 col-11 date-row date-row--header">
+            <div class="row flex justify-center m-2">
+                <Datepicker class="col-3"
+                            v-model="dateWeek"
+                            :value="dateWeek"
+                            @update:modelValue="handleDateWeek"
+                            @closed=""
+                            placeholder="Выберите дату"
+                            textInput
+                            format="yyyy-MM-dd"
+                />
+            </div>
+            <div class="col-1 p-1">
+                <router-link :to="{ name: 'events.create' }" class="btn btn-success">Добавить событие</router-link>
+            </div>
+            <div class="col-11 date-row date-row--header">
                 <div class="date-col date-col-bg" v-for="n in weeks">
                     {{n}}<br>01.01.2022
                 </div>
@@ -97,13 +111,16 @@
 </template>
 
 <script>
-import useEvents from '../../composables/events'
+import useEvents from '../../composables/events';
 import { onMounted } from 'vue';
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+import { ref } from 'vue';
 
 export default {
+    components: { Datepicker },
     setup() {
         const { events, getEvents, destroyEvent } = useEvents()
-
         const deleteEvent = async (id) => {
             if (!window.confirm('Вы уверены, что хотите удалить?')) {
                 return
@@ -111,6 +128,14 @@ export default {
 
             await destroyEvent(id)
             await getEvents()
+        }
+
+        const dateWeek = ref();
+        const handleDateWeek = (date) => {
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            getEvents(year+'-'+month+'-'+day);
         }
 
         const weeks = [
@@ -125,6 +150,8 @@ export default {
             events,
             deleteEvent,
             weeks,
+            dateWeek,
+            handleDateWeek,
         }
     }
 }
