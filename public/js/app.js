@@ -27740,16 +27740,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       };
     }();
 
-    var formatDate = function formatDate(modelName) {
-      form[modelName] = moment__WEBPACK_IMPORTED_MODULE_5___default()(form[modelName]).format("YYYY-MM-DD HH:mm");
-    };
-
     return {
       form: form,
       errors: errors,
-      saveEvent: saveEvent,
-      // format,
-      formatDate: formatDate
+      saveEvent: saveEvent
     };
   }
 });
@@ -27999,7 +27993,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* TEXT */
   )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
     "class": "space-y-6",
-    onSubmit: _cache[6] || (_cache[6] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
+    onSubmit: _cache[4] || (_cache[4] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
       return $setup.saveEvent && $setup.saveEvent.apply($setup, arguments);
     }, ["prevent"]))
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
@@ -28026,11 +28020,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "col-3",
     id: "event_start",
     modelValue: $setup.form.event_start,
-    "onUpdate:modelValue": [_cache[2] || (_cache[2] = function ($event) {
+    "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
       return $setup.form.event_start = $event;
-    }), _cache[3] || (_cache[3] = function ($event) {
-      return $setup.formatDate('event_start');
-    })],
+    }),
     value: $setup.form.event_start,
     placeholder: "Выберите начало события",
     textInput: "",
@@ -28041,11 +28033,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "offset-1 col-3",
     id: "event_end",
     modelValue: $setup.form.event_end,
-    "onUpdate:modelValue": [_cache[4] || (_cache[4] = function ($event) {
+    "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
       return $setup.form.event_end = $event;
-    }), _cache[5] || (_cache[5] = function ($event) {
-      return $setup.formatDate('event_end');
-    })],
+    }),
     value: $setup.form.event_end,
     placeholder: "Выберите конец события",
     textInput: "",
@@ -28355,7 +28345,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClosed: _cache[1] || (_cache[1] = function () {}),
     placeholder: "Выберите дату",
     textInput: "",
-    format: 'yyyy-MM-dd, ' + $setup.moment($setup.dateWeek).locale('ru').format('dddd')
+    format: 'YYYY-MM-DD, ' + $setup.moment($setup.dateWeek).locale('ru').format('dddd')
   }, null, 8
   /* PROPS */
   , ["modelValue", "value", "onUpdate:modelValue", "format"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
@@ -28393,10 +28383,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
         "class": "event-card",
         style: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeStyle)({
-          top: (event.event_start - $setup.moment($setup.dateWeek).add(n - 4, 'day').format('X')) / 60 * 2 + 'px',
-          height: (event.event_end - event.event_start) / 60 * 2 + 'px'
+          top: (event.event_start - $setup.moment($setup.moment($setup.dateWeek).format('YYYY-MM-DD') + ' 00:00').add(n - 4, 'day').format('X')) / 30 + 'px',
+          height: (event.event_end - event.event_start) / 30 + 'px'
         })
-      }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
+      }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.moment($setup.dateWeek).format('YYYY-MM-DD')) + " ", 1
+      /* TEXT */
+      ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
         to: {
           name: 'events.edit',
           params: {
@@ -28416,9 +28408,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       /* PROPS, DYNAMIC_SLOTS */
       , ["to"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(event.description), 1
       /* TEXT */
-      ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.moment.unix(event.event_start).format('HH:mm')), 1
+      ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.moment.unix(event.event_start).format('HH:MM')), 1
       /* TEXT */
-      ), _hoisted_21, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.moment.unix(event.event_end).format('HH:mm')), 1
+      ), _hoisted_21, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.moment.unix(event.event_end).format('HH:MM')), 1
       /* TEXT */
       )])], 4
       /* STYLE */

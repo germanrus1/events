@@ -34,17 +34,18 @@ class EventRequest extends FormRequest
     {
         $validator->after(function ($validator) {
             try {
-                $event_start = Carbon::createFromFormat('Y-m-d H:i', $this->input('event_start'))->getTimestamp();
-                $event_end = Carbon::createFromFormat('Y-m-d H:i', $this->input('event_end'))->getTimestamp();
+                $event_start = Carbon::parse($this->input('event_start'))->setTimezone('UTC')->getTimestamp();
+                $event_end = Carbon::parse($this->input('event_end'))->setTimezone('UTC')->getTimestamp();
 
-                if ($event_end < ($event_start + Event::THIRTY_MIN) && $event_end > ($event_start + Event::DAY)) {
-                    $validator->errors()->add('date_interval', 'Specify the correct interval for the start and end of the event' . $event_end  . '  '. $event_start);
+                if (($event_end - $event_start) < Event::THIRTY_MIN || ($event_end - $event_start) > Event::DAY
+                || $event_end < $event_start) {
+                    $validator->errors()->add('date_interval', 'Specify the correct interval for the start and end of the event');
                 }
 
                 $this->event_start = $event_start;
                 $this->event_end = $event_end;
             } catch (Exception $e) {
-                $validator->errors()->add('date_type', 'Incorrect type date' . $this->input('event_start')  . '  '. $this->input('event_end'));
+                $validator->errors()->add('date_type', 'Incorrect type date');
             }
         });
     }

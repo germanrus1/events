@@ -34,4 +34,34 @@ class Event extends Model
         'event_end',
         'user_id',
     ];
+
+    /**
+     * Checking intersects interval
+     *
+     * @param $request
+     * @return bool
+     */
+    public static function checkIntersectsEvents($request) {
+        // if current interval intersects in other interval
+        $event = self::where('event_start', '<', $request->event_start)
+            ->where('event_end', '>', $request->event_start - self::THIRTY_MIN)
+            ->orWhere(function ($query) use ($request) {
+                $query->where('event_start', '<', $request->event_end)
+                    ->where('event_end', '>', $request->event_end + self::THIRTY_MIN);
+            })
+            // if in current interval intersects other interval
+            ->orWhere(function ($query) use ($request) {
+                $query->where('event_start', '>', $request->event_start)
+                    ->where('event_start', '<', $request->event_end);
+            })
+            ->orWhere(function ($query) use ($request) {
+                $query->where('event_end', '>', $request->event_start)
+                    ->where('event_end', '<', $request->event_end);
+            })
+            ->select('id')
+            ->doesntExist();
+
+        return $event;
+    }
+
 }

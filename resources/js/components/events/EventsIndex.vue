@@ -9,7 +9,7 @@
                             @closed=""
                             placeholder="Выберите дату"
                             textInput
-                            :format="'yyyy-MM-dd, ' + moment(dateWeek).locale('ru').format('dddd')"
+                            :format="'YYYY-MM-DD, ' + moment(dateWeek).locale('ru').format('dddd')"
                 />
             </div>
             <div class="col-1 p-1">
@@ -35,21 +35,22 @@
                     <div class="event-card"
                         v-for="event in events['w_' + moment(dateWeek).add((n-4), 'day').isoWeekday()]"
                         :style="{
-                        top: (event.event_start - moment(dateWeek).add((n-4), 'day').format('X')) / 60 * 2 + 'px',
-                        height: (event.event_end - event.event_start) / 60 * 2 + 'px',
+                            top: (event.event_start - moment(moment(dateWeek).format('YYYY-MM-DD') + ' 00:00').add((n-4), 'day').format('X')) / 30 + 'px',
+                            height: (event.event_end - event.event_start) / 30 + 'px',
                         }
                     ">
+                        {{moment(dateWeek).format('YYYY-MM-DD')}}
                         <div class="event-card--name">
                             <router-link :to="{ name: 'events.edit', params: { id: event.id } }">{{ event.name }}</router-link>
                         </div>
                         <div class="event-card--description">{{ event.description }}</div>
                         <div class="event-card--time">
                             <div style="width: 45%">
-                                {{moment.unix(event.event_start).format('HH:mm')}}
+                                {{moment.unix(event.event_start).format('HH:MM')}}
                             </div>
                             <div style="width: 10%"> — </div>
                             <div style="width: 45%">
-                                {{moment.unix(event.event_end).format('HH:mm')}}
+                                {{moment.unix(event.event_end).format('HH:MM')}}
                             </div>
                         </div>
                     </div>

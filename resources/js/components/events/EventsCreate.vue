@@ -32,7 +32,6 @@
                                 :value="form.event_start"
                                 placeholder="Выберите начало события"
                                 textInput
-                                @update:modelValue="formatDate('event_start')"
                                 :format="'yyyy-MM-dd HH:mm'"
                     />
 
@@ -42,7 +41,6 @@
                                 :value="form.event_end"
                                 placeholder="Выберите конец события"
                                 textInput
-                                @update:modelValue="formatDate('event_end')"
                                 :format="'yyyy-MM-dd HH:mm'"
                     />
                 </div>
@@ -79,16 +77,10 @@ export default {
         const saveEvent = async () => {
             await storeEvent({ ...form })
         }
-        const formatDate = (modelName) => {
-            form[modelName] = moment(form[modelName]).format("YYYY-MM-DD HH:mm");
-        }
-
         return {
             form,
             errors,
             saveEvent,
-            // format,
-            formatDate,
         }
     }
 }

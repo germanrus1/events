@@ -8,8 +8,6 @@ use App\Http\Requests\EventRequest;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 
 class EventController extends Controller
 {
@@ -43,7 +41,18 @@ class EventController extends Controller
         $validated['user_id'] = auth()->user()->id;
         $validated['event_start'] = $request->event_start;
         $validated['event_end'] = $request->event_end;
-        $event = Event::create($validated);
+
+        if (Event::checkIntersectsEvents($request)) {
+            $event = Event::create($validated);
+        } else {
+            return response()->json([
+                'errors' => [
+                    'datetime_interval' => ['This slot is booked.']
+                ],
+                'message' => 'The given data was invalid.'
+            ], 422);
+
+        }
 
         return new EventResource($event);
     }
@@ -64,6 +73,12 @@ class EventController extends Controller
         return new EventResource($event);
     }
 
+    /**
+     * Delete event element
+     *
+     * @param Event $event
+     * @return \Illuminate\Http\Response
+     */
     public function destroy(Event $event)
     {
         $event->delete();
