@@ -21,19 +21,29 @@ class EventController extends Controller
         if ($dateWeek) {
             $dateWeek = Carbon::createFromFormat('Y-m-d', $dateWeek)->getTimestamp();
         } else {
-            $dateWeek = Carbon::now()->getTimestamp(); //todo доделать
+            $dateWeek = Carbon::now()->getTimestamp();
+        }
+        $events = Event::where('event_start', '>', $dateWeek - Event::THREE_DAY)
+            ->where('event_start', '<', $dateWeek + Event::FOUR_DAY)
+            ->orderBy('event_start')
+            ->get();
+
+        $results = [];
+
+        foreach ($events as $key => $event) {
+            $results['w_' . date('w', $event->start_event)][] = $event;
         }
 
-        return EventResource::collection(
-            Event::all()
-                ->where('event_start', '>', $dateWeek - Event::THREE_DAY)
-                ->where('event_start', '<', $dateWeek + Event::FOUR_DAY)
-        );
+        return EventResource::collection($results);
     }
 
     public function store(EventRequest $request)
     {
-        $event = Event::create($request);
+        $validated = $request->validated();
+        $validated['user_id'] = auth()->user()->id;
+        $validated['event_start'] = $request->event_start;
+        $validated['event_end'] = $request->event_end;
+        $event = Event::create($validated);
 
         return new EventResource($event);
     }

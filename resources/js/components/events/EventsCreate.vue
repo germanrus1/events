@@ -42,7 +42,6 @@
                                 :value="form.event_end"
                                 placeholder="Выберите конец события"
                                 textInput
-                                valueType="format"
                                 @update:modelValue="formatDate('event_end')"
                                 :format="'yyyy-MM-dd HH:mm'"
                     />
@@ -59,8 +58,8 @@
 </template>
 
 <script>
-import useEvents from '../../composables/events'
-import { reactive, ref } from 'vue'
+import useEvents from '../../composables/events';
+import { reactive, ref } from 'vue';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import moment from 'moment';
@@ -82,22 +81,13 @@ export default {
         }
         const formatDate = (modelName) => {
             form[modelName] = moment(form[modelName]).format("YYYY-MM-DD HH:mm");
-            console.log(form.event_start);
-        }
-        const format = (date) => {
-            const day = date.getDate();
-            const month = date.getMonth() + 1;
-            const year = date.getFullYear();
-            const hour = date.getHours();
-            const minute = date.getMinutes();
-            return `${year}-${month}-${day} ${hour}:${minute}`;
         }
 
         return {
             form,
             errors,
             saveEvent,
-            format,
+            // format,
             formatDate,
         }
     }
