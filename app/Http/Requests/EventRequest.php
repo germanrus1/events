@@ -23,6 +23,7 @@ class EventRequest extends FormRequest
             'description' => ['required', 'string'],
             'event_start' => ['required', 'date:Y-m-d H:i'],
             'event_end' => ['required', 'date:Y-m-d H:i'],
+            'users' => ['array'],
         ];
     }
 
@@ -32,6 +33,7 @@ class EventRequest extends FormRequest
      */
     public function withValidator($validator)
     {
+
         $validator->after(function ($validator) {
             try {
                 $event_start = Carbon::parse($this->input('event_start'))->setTimezone('UTC')->getTimestamp();

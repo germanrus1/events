@@ -23,6 +23,18 @@
                     </textarea>
                 </div>
             </div>
+            <div>
+                <div class="mt-1">
+                    <Multiselect
+                        mode="tags"
+                        :createTag="true"
+                        tag-position="bottom"
+                        v-model="form.users"
+                        :value="[2,3]"
+                        :options="users"
+                    />
+                </div>
+            </div>
 
             <div>
                 <div class="row flex justify-center mt-3">
@@ -57,22 +69,24 @@
 
 <script>
 import useEvents from '../../composables/events';
-import { reactive, ref } from 'vue';
+import {onMounted, reactive, ref} from 'vue';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
-import moment from 'moment';
+// import moment from 'moment';
+import Multiselect from '@vueform/multiselect'
 
 export default {
-    components: { Datepicker },
+    components: { Datepicker, Multiselect },
     setup() {
         const form = reactive({
             name: '',
             description: '',
             event_start: '',
-            event_end: ''
+            event_end: '',
+            users: [],
         })
-
-        const { errors, storeEvent } = useEvents()
+        onMounted(() => getMembers())
+        const { errors, storeEvent, users, getMembers } = useEvents()
 
         const saveEvent = async () => {
             await storeEvent({ ...form })
@@ -80,6 +94,8 @@ export default {
         return {
             form,
             errors,
+            users,
+            getMembers,
             saveEvent,
         }
     }

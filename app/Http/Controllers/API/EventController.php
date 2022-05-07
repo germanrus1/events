@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\EventResource;
 use App\Http\Requests\EventRequest;
 use App\Models\Event;
+use App\Models\Member;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -44,6 +46,11 @@ class EventController extends Controller
 
         if (Event::checkIntersectsEvents($request)) {
             $event = Event::create($validated);
+            if ($event->id) {
+                foreach ($validated['users'] as $user_id) {
+                    Member::create(['user_id' => $user_id, 'event_id' => $event->id]);
+                }
+            }
         } else {
             return response()->json([
                 'errors' => [
@@ -57,8 +64,23 @@ class EventController extends Controller
         return new EventResource($event);
     }
 
+    /** Get all users or users from events
+     *
+     *
+     */
+    public function getUsers(Request $request)
+    {
+        $users = Event::users($request->input('event_id'));
+
+        return response()->json(['users' => $users]);
+    }
+
     public function show(Event $event)
     {
+        $event->event_start = Carbon::parse($event->event_start)->setTimezone('UTC')->format('Y-m-d H:i');
+        $event->event_end = Carbon::parse($event->event_end)->setTimezone('UTC')->format('Y-m-d H:i');
+        $event->users = array_keys(Event::users($event->id));
+
         return new EventResource($event);
     }
 

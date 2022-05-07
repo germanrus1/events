@@ -5,17 +5,21 @@ import { useRouter } from 'vue-router'
 export default function useEvents() {
     const event = ref([])
     const events = ref([])
+    const users = ref([])
 
     const errors = ref('')
     const router = useRouter()
 
     const getEvents = async (dateWeek = '') => {
-        let response = await axios.get('/api/events?dateWeek=' + dateWeek)
+        const response = await axios.get('/api/events?dateWeek=' + dateWeek)
         events.value = response.data.data
     }
-
+    const getMembers = async (curEvent = '') => {
+        const response = await axios.get('/api/events/users?event=' + curEvent)
+        users.value = response.data.users
+    }
     const getEvent = async (id) => {
-        let response = await axios.get(`/api/events/${id}`)
+        const response = await axios.get(`/api/events/${id}`)
         event.value = response.data.data
     }
 
@@ -56,8 +60,10 @@ export default function useEvents() {
         errors,
         event,
         events,
+        users,
         getEvent,
         getEvents,
+        getMembers,
         storeEvent,
         updateEvent,
         destroyEvent,
