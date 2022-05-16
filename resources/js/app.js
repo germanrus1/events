@@ -7,7 +7,6 @@ import router from './router';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@vueform/multiselect/themes/default.css';
-
 import EventsIndex from './components/events/EventsIndex.vue';
 
 createApp({

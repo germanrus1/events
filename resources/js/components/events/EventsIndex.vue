@@ -58,53 +58,10 @@
             </div>
         </div>
     </div>
-    <div class="flex place-content-end mb-4">
-        <div class="px-4 py-2 text-white bg-gray-800 hover:bg-gray-800 cursor-pointer">
-            <router-link :to="{ name: 'events.create' }" class="text-sm font-medium">Добавить событие</router-link>
+    <div class="row flex justify-center mt-3">
+        <div class="col-2 btn btn-success">
+            <router-link :to="{ name: 'events.create' }" class="text-sm font-medium text-white">Добавить событие</router-link>
         </div>
-    </div>
-    <div class="overflow-hidden overflow-x-auto min-w-full align-middle sm:rounded-md">
-        <table class="min-w-full border divide-y divide-gray-200">
-            <thead>
-            <tr>
-                <th class="px-6 py-3 bg-gray-50">
-                    <span
-                        class="text-xs font-medium tracking-wider leading-4 text-left text-gray-500 uppercase">Name</span>
-                </th>
-                <th class="px-6 py-3 bg-gray-50">
-                    <span
-                        class="text-xs font-medium tracking-wider leading-4 text-left text-gray-500 uppercase">Description</span>
-                </th>
-                <th class="px-6 py-3 bg-gray-50">
-                    <span
-                        class="text-xs font-medium tracking-wider leading-4 text-left text-gray-500 uppercase">Start</span>
-                </th>
-                <th class="px-6 py-3 bg-gray-50">
-                    <span
-                        class="text-xs font-medium tracking-wider leading-4 text-left text-gray-500 uppercase">End</span>
-                </th>
-            </tr>
-            </thead>
-
-            <tbody class="bg-white divide-y divide-gray-200 divide-solid">
-            <template v-for="item in events" :key="item.id">
-                <tr class="bg-white">
-                    <td class="px-6 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                        {{ item.name }}
-                    </td>
-                    <td class="px-6 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                        {{ item.description }}
-                    </td>
-                    <td class="px-6 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                        {{ item.event_start }}
-                    </td>
-                    <td class="px-6 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                        {{ item.event_end }}
-                    </td>
-                </tr>
-            </template>
-            </tbody>
-        </table>
     </div>
 </template>
 
@@ -115,9 +72,10 @@ import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { ref } from 'vue';
 import moment from 'moment';
+import Identicon from 'identicon.js'
 
 export default {
-    components: { Datepicker },
+    components: { Datepicker, Identicon },
     setup() {
         const { events, getEvents, destroyEvent } = useEvents()
         const deleteEvent = async (id) => {
@@ -130,6 +88,9 @@ export default {
         }
         const getWeekDayName = (w) => {
             return weeks[getWeekDayNum(w)];
+        }
+        const getHashCode = (str = '') => {
+            return (str + 'd3b07384d113edec49eaa6238ad5ff00').substr(0, 15);
         }
         const getWeekDayNum = (w) => {
             w = moment(dateWeek).isoWeekday() + w;
@@ -146,7 +107,13 @@ export default {
             'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'
         ]
 
-        const showModal = false
+        // add avatar
+        let avatarElement = document.getElementById('userAvatar');
+        if (!avatarElement.innerHTML) {
+            let dataAvatar = new Identicon(getHashCode(avatarElement.dataset.name), 420).toString();
+            avatarElement.innerHTML = '<img style="height: 40px; object-fit: cover;" src="data:image/png;base64,' + dataAvatar + '">';
+
+        }
 
         onMounted(getEvents)
 

@@ -27,6 +27,8 @@ class Event extends Model
     const WEEK = 604800; // 1 week in seconds
     const MONTH = 18144000; // 2 month in seconds
 
+    public $users;
+
     protected $fillable = [
         'name',
         'description',
@@ -67,7 +69,7 @@ class Event extends Model
     }
 
     /**
-     * Gets the participants of the eventasfd
+     * Gets the participants of the event
      */
     public static function users($event = '')
     {

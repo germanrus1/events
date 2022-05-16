@@ -92,16 +92,12 @@ export default {
             await updateEvent(props.id)
             await getMembers(props.id)
         }
-        const test = (event) => {
-            console.log('test', event.event_start)
-        }
         return {
             errors,
             event,
             users,
             saveEvent,
             getMembers,
-            test,
         }
     }
 }
